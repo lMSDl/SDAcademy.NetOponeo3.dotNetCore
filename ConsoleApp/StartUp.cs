@@ -5,6 +5,7 @@ using ConsoleApp.Configurations.Models;
 using ConsoleApp.ConsoleServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Models;
 using Newtonsoft.Json;
 using Services.Fakers;
@@ -22,8 +23,14 @@ namespace ConsoleApp
             var serviceCollection = new ServiceCollection();
             RegisterConfigrationRoot(serviceCollection);
             RegisterConfigApp(serviceCollection);
-            serviceCollection.AddScoped<ICrudService<User>> (x => new CrudService<User>(new UserFaker(), x.GetService<ConfigApp>().Faker.NumberOfGeneratedObjects));
-            serviceCollection.AddScoped<Program>();
+            serviceCollection
+            .AddScoped<ICrudService<User>> (x => new CrudService<User>(new UserFaker(), x.GetService<ConfigApp>().Faker.NumberOfGeneratedObjects))
+            .AddScoped<Program>()
+            .AddLogging(builder => builder
+                .AddConsole()
+                .AddDebug()
+            )
+            .Configure<LoggerFilterOptions>(options => options.MinLevel = LogLevel.Trace);
 
             ServiceProvider = serviceCollection.BuildServiceProvider();
         }
