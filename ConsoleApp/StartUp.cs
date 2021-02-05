@@ -61,6 +61,20 @@ namespace ConsoleApp
             // new LambdaExamples().Test();
         }
 
+        private static void Discard() {
+            if(DateTime.TryParse("1.2.2021", out _)) {
+
+            }
+            object obj = new User();
+            switch(obj)
+            {
+                case Entity _:
+                    System.Console.WriteLine("Is Entity");
+                break;
+
+            }
+        }
+
         private static void DependencyInjectionDemo()
         {
             var serviceCollection = new ServiceCollection();
