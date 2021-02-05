@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using ConsoleApp.Configurations.Models;
 using Microsoft.Extensions.Configuration;
 using Models;
 using Newtonsoft.Json;
@@ -29,7 +30,11 @@ namespace ConsoleApp
             .AddYamlFile("Configurations/badconfig.yaml", optional: true, reloadOnChange: true)
             .Build();
 
+            var configApp = new ConfigApp();
+            config.Bind(configApp);
+
             System.Console.WriteLine($"{config.GetSection("Section").GetSection("Subsection")["SubsectionKey2"]} {config.GetSection("Section")["SectionKey1"]}!");
+            System.Console.WriteLine($"{configApp.Section.Subsection.SubsectionKey2} {configApp.Section.SectionKey1}!");
 
 
 
