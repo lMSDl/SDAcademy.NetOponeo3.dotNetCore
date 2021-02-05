@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using ConsoleApp.Configurations.Models;
 using ConsoleApp.ConsoleServices;
+using ConsoleApp.Delegates;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -39,15 +40,23 @@ namespace ConsoleApp
 
         static void Main(string[] args)
         {
-            var logger = ServiceProvider.GetService<ILogger<StartUp>>();
-            using(logger.BeginScope("Main")) {
-                ConfigDemo();
-                DependencyInjectionDemo();
+            // var logger = ServiceProvider.GetService<ILogger<StartUp>>();
+            // using(logger.BeginScope("Main")) {
+            //     ConfigDemo();
+            //     DependencyInjectionDemo();
 
-                //new Program(ServiceProvider.GetService<ICrudService<User>>()).Run();
-                using(logger.BeginScope("Program"))
-                    ServiceProvider.GetService<Program>().Run();
-            }
+            //     //new Program(ServiceProvider.GetService<ICrudService<User>>()).Run();
+            //     using(logger.BeginScope("Program"))
+            //         ServiceProvider.GetService<Program>().Run();
+            // }
+
+            var example = new Delegates.EventExample();
+            example.OddNumberEvent += delegate () {System.Console.WriteLine("Odd number detected!");};
+            example.OddNumberDelegate = null;
+            example.Test();
+
+            new BuildInDelegatesExample().Test();
+            new LambdaExamples().Test();
         }
 
         private static void DependencyInjectionDemo()
