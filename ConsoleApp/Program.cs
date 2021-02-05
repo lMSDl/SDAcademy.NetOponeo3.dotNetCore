@@ -29,8 +29,11 @@ namespace ConsoleApp
                         System.Console.WriteLine(JsonConvert.SerializeObject(x)); 
                         }
                     );
+                    
                 Logger.LogTrace($"End {nameof(RunAsync)}");
             }
+
+            await Service.UpdateAsync(1000, null);
         }
     }
 }

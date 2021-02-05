@@ -42,6 +42,8 @@ namespace ConsoleApp
         static async Task Main(string[] args)
         {
             var logger = ServiceProvider.GetService<ILogger<StartUp>>();
+            System.AppDomain.CurrentDomain.UnhandledException += (sender, args) => logger.LogError(args.ExceptionObject.ToString());
+
             using(logger.BeginScope("Main")) {
                 ConfigDemo();
                 DependencyInjectionDemo();
