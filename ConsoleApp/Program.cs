@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Models;
 using Newtonsoft.Json;
@@ -8,27 +9,27 @@ namespace ConsoleApp
 {
     public class Program
     {
-        private ICrudService<User> Service {get;}
+        private ICrudServiceAsync<User> Service {get;}
         private ILogger Logger {get;}
 
-        public Program(ICrudService<User> service, ILogger<Program> logger)
+        public Program(ICrudServiceAsync<User> service, ILogger<Program> logger)
         {
             Service = service;
             Logger = logger;
         }
 
-        public void Run() {
+        public async Task RunAsync() {
             using(Logger.BeginScope("Run")) {
-                Logger.LogTrace($"Begin {nameof(Run)}");
+                Logger.LogTrace($"Begin {nameof(RunAsync)}");
                 
                 using(Logger.BeginScope("Service ForEach"))
-                    Service.Read().ToList().ForEach(x => {
+                    (await Service.ReadAsync()).ToList().ForEach(x => {
                         
                         Logger.LogInformation($"Display user {x.Id}");
                         System.Console.WriteLine(JsonConvert.SerializeObject(x)); 
                         }
                     );
-                Logger.LogTrace($"End {nameof(Run)}");
+                Logger.LogTrace($"End {nameof(RunAsync)}");
             }
         }
     }

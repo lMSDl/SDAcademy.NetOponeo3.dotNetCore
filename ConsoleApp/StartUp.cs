@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using ConsoleApp.Configurations.Models;
 using ConsoleApp.ConsoleServices;
 using ConsoleApp.Delegates;
@@ -26,7 +27,7 @@ namespace ConsoleApp
             var configRoot = RegisterConfigrationRoot(serviceCollection);
             RegisterConfigApp(serviceCollection);
             serviceCollection
-            .AddScoped<ICrudService<User>> (x => new CrudService<User>(new UserFaker(), x.GetService<ConfigApp>().Faker.NumberOfGeneratedObjects))
+            .AddScoped<ICrudServiceAsync<User>> (x => new CrudService<User>(new UserFaker(), x.GetService<ConfigApp>().Faker.NumberOfGeneratedObjects))
             .AddScoped<Program>()
             .AddLogging(builder => builder
                 .AddConfiguration(configRoot.GetSection("Logging"))
@@ -38,25 +39,26 @@ namespace ConsoleApp
             ServiceProvider = serviceCollection.BuildServiceProvider();
         }
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            // var logger = ServiceProvider.GetService<ILogger<StartUp>>();
-            // using(logger.BeginScope("Main")) {
-            //     ConfigDemo();
-            //     DependencyInjectionDemo();
+            var logger = ServiceProvider.GetService<ILogger<StartUp>>();
+            using(logger.BeginScope("Main")) {
+                ConfigDemo();
+                DependencyInjectionDemo();
 
-            //     //new Program(ServiceProvider.GetService<ICrudService<User>>()).Run();
-            //     using(logger.BeginScope("Program"))
-            //         ServiceProvider.GetService<Program>().Run();
-            // }
+                //new Program(ServiceProvider.GetService<ICrudService<User>>()).Run();
+                using(logger.BeginScope("Program"))
+                    await ServiceProvider.GetService<Program>().RunAsync();
+            }
 
-            var example = new Delegates.EventExample();
-            example.OddNumberEvent += delegate () {System.Console.WriteLine("Odd number detected!");};
-            example.OddNumberDelegate = null;
-            example.Test();
 
-            new BuildInDelegatesExample().Test();
-            new LambdaExamples().Test();
+            // var example = new Delegates.EventExample();
+            // example.OddNumberEvent += delegate () {System.Console.WriteLine("Odd number detected!");};
+            // example.OddNumberDelegate = null;
+            // example.Test();
+
+            // new BuildInDelegatesExample().Test();
+            // new LambdaExamples().Test();
         }
 
         private static void DependencyInjectionDemo()
