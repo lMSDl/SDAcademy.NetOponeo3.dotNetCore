@@ -38,7 +38,7 @@ namespace ConsoleApp
 
 
 
-            Service = new CrudService<User>(new UserFaker() , 15);
+            Service = new CrudService<User>(new UserFaker(), configApp.Faker.NumberOfGeneratedObjects);
             Service.Read().ToList().ForEach(x => System.Console.WriteLine( JsonConvert.SerializeObject(x) ));
         }
     }

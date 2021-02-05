@@ -5,5 +5,8 @@
             "SubsectionKey2": "Bye"
         },
         "SectionKey1": "from Json"
+    },
+    "Faker": {
+        "NumberOfGeneratedObjects": 10
     }
 }
