@@ -18,14 +18,18 @@ namespace ConsoleApp
         }
 
         public void Run() {
-            Logger.LogTrace($"Begin {nameof(Run)}");
-            Service.Read().ToList().ForEach(x => {
+            using(Logger.BeginScope("Run")) {
+                Logger.LogTrace($"Begin {nameof(Run)}");
                 
-                Logger.LogInformation($"Display user {x.Id}");
-                System.Console.WriteLine(JsonConvert.SerializeObject(x)); 
-                }
-            );
-            Logger.LogTrace($"End {nameof(Run)}");
+                using(Logger.BeginScope("Service ForEach"))
+                    Service.Read().ToList().ForEach(x => {
+                        
+                        Logger.LogInformation($"Display user {x.Id}");
+                        System.Console.WriteLine(JsonConvert.SerializeObject(x)); 
+                        }
+                    );
+                Logger.LogTrace($"End {nameof(Run)}");
+            }
         }
     }
 }

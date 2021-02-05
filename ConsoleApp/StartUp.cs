@@ -6,6 +6,7 @@ using ConsoleApp.ConsoleServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 using Models;
 using Newtonsoft.Json;
 using Services.Fakers;
@@ -21,12 +22,13 @@ namespace ConsoleApp
         static StartUp()
         {
             var serviceCollection = new ServiceCollection();
-            RegisterConfigrationRoot(serviceCollection);
+            var configRoot = RegisterConfigrationRoot(serviceCollection);
             RegisterConfigApp(serviceCollection);
             serviceCollection
             .AddScoped<ICrudService<User>> (x => new CrudService<User>(new UserFaker(), x.GetService<ConfigApp>().Faker.NumberOfGeneratedObjects))
             .AddScoped<Program>()
             .AddLogging(builder => builder
+                .AddConfiguration(configRoot.GetSection("Logging"))
                 .AddConsole()
                 .AddDebug()
             )
@@ -37,11 +39,15 @@ namespace ConsoleApp
 
         static void Main(string[] args)
         {
-            ConfigDemo();
-            DependencyInjectionDemo();
+            var logger = ServiceProvider.GetService<ILogger<StartUp>>();
+            using(logger.BeginScope("Main")) {
+                ConfigDemo();
+                DependencyInjectionDemo();
 
-            //new Program(ServiceProvider.GetService<ICrudService<User>>()).Run();
-            ServiceProvider.GetService<Program>().Run();
+                //new Program(ServiceProvider.GetService<ICrudService<User>>()).Run();
+                using(logger.BeginScope("Program"))
+                    ServiceProvider.GetService<Program>().Run();
+            }
         }
 
         private static void DependencyInjectionDemo()
@@ -96,11 +102,10 @@ namespace ConsoleApp
             System.Console.WriteLine($"{configApp.Section.Subsection.SubsectionKey2} {configApp.Section.SectionKey1}!");
         }
 
-        private static void RegisterConfigrationRoot(ServiceCollection serviceCollection)
+        private static IConfigurationRoot RegisterConfigrationRoot(ServiceCollection serviceCollection)
         {
-            serviceCollection.AddSingleton<IConfigurationRoot>(x => 
                 //package Microsoft.Extensions.Configuration
-                new ConfigurationBuilder()
+             var config = new ConfigurationBuilder()
                 //package Microsoft.Extensions.Configuration.FileExtensions
                 //package Microsoft.Extensions.Configuration.json
                 .AddJsonFile("Configurations/configApp.json", optional: true, reloadOnChange: true)
@@ -111,8 +116,9 @@ namespace ConsoleApp
                 //package Microsoft.Extensions.Configuration.xml
                 .AddXmlFile("Configurations/configApp.xml", optional: true, reloadOnChange: true)
                 .AddYamlFile("Configurations/badconfig.yaml", optional: true, reloadOnChange: true)
-                .Build()
-            );
+                .Build();
+            serviceCollection.AddSingleton<IConfigurationRoot>(x => config);
+            return config;
         }
         private static void RegisterConfigApp(ServiceCollection serviceCollection)
         {

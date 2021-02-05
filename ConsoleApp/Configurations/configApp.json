@@ -8,5 +8,16 @@
     },
     "Faker": {
         "NumberOfGeneratedObjects": 10
+    },
+    "Logging": {
+        "LogLevel": {
+            "Default": "Trace"
+        },
+        "Console": {
+            "LogLevel": {
+                "Default": "Information"
+            },
+            "IncludeScopes": true
+        }
     }
 }
