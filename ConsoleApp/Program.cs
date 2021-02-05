@@ -31,6 +31,7 @@ namespace ConsoleApp
             .Build();
 
             var configApp = new ConfigApp();
+            //package Microsoft.Extensions.Configuration.Binder
             config.Bind(configApp);
 
             System.Console.WriteLine($"{config.GetSection("Section").GetSection("Subsection")["SubsectionKey2"]} {config.GetSection("Section")["SectionKey1"]}!");
