@@ -4,6 +4,10 @@
 	```
 	dotnet new console [-o <LOKALIZACJA> -n <NAZWA_PROEKTU>]
 	```	
+	* biblioteki
+	```
+	dotnet new classlib [-o <LOKALIZACJA> -n <NAZWA_PROEKTU>]
+	```
   
 * Kompilacja i uruchomienie
 	```
@@ -30,4 +34,17 @@
 	* samodzielny plik wykonywalny + ReadyToRun
 	```
 	dotnet publish -r <IDENTYFIKATOR_ŚRODOWISKA> -p:PublishReadyToRun=true
+	```
+* Pakiety i referencje
+	* Dodawanie pakietów
+	```
+	dotnet add package <NAZWA_PAKIETU>
+	```
+	* Pobranie pakietów
+	```
+	dotnet restore
+	```
+	* Dodawanie referencji
+	```
+	dotnet add reference <ŚCIEŻKA_PROJEKTU>
 	```
