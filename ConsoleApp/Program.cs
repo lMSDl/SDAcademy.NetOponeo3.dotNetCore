@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using ConsoleApp.Configurations.Models;
+using ConsoleApp.ConsoleServices;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Models;
 using Newtonsoft.Json;
 using Services.Fakers;
@@ -28,8 +31,52 @@ namespace ConsoleApp
         {
             ConfigDemo();
 
-            Service = new CrudService<User>(new UserFaker(), ConfigApp.Faker.NumberOfGeneratedObjects);
-            Service.Read().ToList().ForEach(x => System.Console.WriteLine(JsonConvert.SerializeObject(x)));
+            DependencyInjectionDemo();
+
+            //Service = new CrudService<User>(new UserFaker(), ConfigApp.Faker.NumberOfGeneratedObjects);
+            //Service.Read().ToList().ForEach(x => System.Console.WriteLine(JsonConvert.SerializeObject(x)));
+        }
+
+        private static void DependencyInjectionDemo()
+        {
+            var serviceCollection = new ServiceCollection();
+            var serviceProvider = serviceCollection
+            .AddTransient<ConsoleWriteLineService>()
+            .AddTransient<IConsoleService, ConsoleWriteLineService>()
+            .AddTransient<IConsoleService, ConsoleWriteFiggleLineService>()
+            .BuildServiceProvider();
+
+            serviceProvider.GetServices<IConsoleService>().ToList().ForEach(x => x.WriteLine(x.GetType().Name));
+            var consoleService = serviceProvider.GetService<IConsoleService>();
+            consoleService.WriteLine("Hello");
+        }
+
+        private static void ScopeDemo()
+        {
+            var serviceCollection = new ServiceCollection();
+            var serviceProvider = serviceCollection
+            .AddScoped<IConsoleService, ConsoleWriteFiggleLineService>()
+            .BuildServiceProvider();
+            var scopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
+            IConsoleService instanceOne;
+            IConsoleService instanceTwo;
+            IConsoleService instanceThree;
+
+            using (var scope = scopeFactory.CreateScope())
+            {
+                instanceOne = scope.ServiceProvider.GetService<IConsoleService>();
+                instanceOne.WriteLine(nameof(instanceOne));
+            }
+
+            using (var scope = scopeFactory.CreateScope())
+            {
+                instanceTwo = scope.ServiceProvider.GetService<IConsoleService>();
+                instanceThree = scope.ServiceProvider.GetService<IConsoleService>();
+                instanceOne.WriteLine(nameof(instanceTwo));
+            }
+
+            Debug.Assert(instanceTwo == instanceThree);
+            Debug.Assert(instanceOne != instanceTwo);
         }
 
         private static void ConfigDemo()
