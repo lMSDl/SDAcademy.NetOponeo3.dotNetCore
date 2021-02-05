@@ -1,1 +1,33 @@
-# SDAcademy.NetOponeo3.dotNetCore
+## CLI
+* Nowy projekt
+	* konsolowy
+	```
+	dotnet new console [-o <LOKALIZACJA> -n <NAZWA_PROEKTU>]
+	```	
+  
+* Kompilacja i uruchomienie
+	```
+	dotnet build
+	dotnet <NAZWA_PROJEKTU>.dll [<PARAMETRY>]
+	```
+	```
+	dotnet [watch] run [PARAMETRY]
+	```
+  
+* Publikacja
+	* plik wykonywalny zależny od platformy dla bieżącej platformy
+	```
+	dotnet publish
+	```
+	* plik wykonywalny zależny od platformy dla określonej platformy
+	```
+	dotnet publish -r <IDENTYFIKATOR_ŚRODOWISKA> --self-contained false
+	```
+	* samodzielny plik wykonywalny
+	```
+	dotnet publish -r <IDENTYFIKATOR_ŚRODOWISKA>
+	```
+	* samodzielny plik wykonywalny + ReadyToRun
+	```
+	dotnet publish -r <IDENTYFIKATOR_ŚRODOWISKA> -p:PublishReadyToRun=true
+	```
