@@ -1,0 +1,4 @@
+<configuration>
+    <Hello>from Xml</Hello>
+    <HelloXml>from Xml</HelloXml>
+</configuration>
