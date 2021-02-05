@@ -1,2 +1,5 @@
-Hello: from YAML
-HelloYaml: from YAML
+Section:
+    Subsection:
+            SubsectionKey1: Hello
+            SubsectionKey2: Bye
+    SectionKey1: "from Yaml"

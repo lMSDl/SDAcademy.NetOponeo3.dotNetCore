@@ -1,4 +1,9 @@
 <configuration>
-    <Hello>from Xml</Hello>
-    <HelloXml>from Xml</HelloXml>
+    <Section> 
+        <Subsection>
+            <SubsectionKey1>Hello</SubsectionKey1>
+            <SubsectionKey2>Bye</SubsectionKey2>
+        </Subsection>
+        <SectionKey1>from xml</SectionKey1>
+    </Section>
 </configuration>

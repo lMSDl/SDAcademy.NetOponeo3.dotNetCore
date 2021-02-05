@@ -29,8 +29,9 @@ namespace ConsoleApp
             .AddYamlFile("Configurations/badconfig.yaml", optional: true, reloadOnChange: true)
             .Build();
 
-            System.Console.WriteLine($"Hello {config["Hello"]}!");
-            System.Console.WriteLine($"Hello {config["HelloJson"]}!");
+            System.Console.WriteLine($"{config.GetSection("Section").GetSection("Subsection")["SubsectionKey2"]} {config.GetSection("Section")["SectionKey1"]}!");
+
+
 
             Service = new CrudService<User>(new UserFaker() , 15);
             Service.Read().ToList().ForEach(x => System.Console.WriteLine( JsonConvert.SerializeObject(x) ));
