@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RoutingWeb.Middleware;
 
 namespace RoutingWeb
 {
@@ -17,6 +18,7 @@ namespace RoutingWeb
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<LimitRequestsMiddleware>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -26,7 +28,7 @@ namespace RoutingWeb
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
             app.UseRouting();    
 
             app.Use(async (context, next) => {
@@ -47,20 +49,24 @@ namespace RoutingWeb
                     System.Console.WriteLine("End MapRun");
             }));
 
+            app.UseMiddleware<LimitRequestsMiddleware>();
+
             app.UseEndpoints(endpoints =>
             {
 
                 endpoints.MapGet("/oddNumber", async context =>
                 {
                     await Task.Delay(5000);
-                    //TODO obsługa
-                });
+                    await context.Response.WriteAsync(GenerateNumber(x => (x % 2) != 0).ToString());
+                })
+                .WithMetadata(new LimitRequestsMiddleware.LimitRequestsMiddlewareMetadata {Limit = 1});
                 
                 endpoints.MapGet("/evenNumber", async context =>
                 {
                     await Task.Delay(5000);
-                    //TODO obsługa
-                });
+                    await context.Response.WriteAsync(GenerateNumber(x => (x % 2) == 0).ToString());
+                })
+                .WithMetadata(new LimitRequestsMiddleware.LimitRequestsMiddlewareMetadata {Limit = 2});
 
                 endpoints.MapGet("/", async context =>
                 {
@@ -71,10 +77,7 @@ namespace RoutingWeb
                 {
                     await context.Response.WriteAsync(PrepareHello((int)context.Items["middlewareItem"]));
                 });
-                endpoints.MapGet("/exception", async context =>
-                {
-                    throw new Exception("Something wrong!");
-                });
+                endpoints.MapGet("/exception", context => throw new Exception("Something wrong!"));
 
             });
 
@@ -90,6 +93,17 @@ namespace RoutingWeb
             for(var i = 0; i < repeat; i ++)
                 stringBuilder.AppendLine("Hello World!");
             return stringBuilder.ToString();
+        }
+
+        private static int GenerateNumber(Func<int, bool> predicate) {
+            var random = new Random();
+            int result;
+            do {
+                result = random.Next();
+            }
+            while(!predicate(result));
+
+            return result;
         }
     }
 }
