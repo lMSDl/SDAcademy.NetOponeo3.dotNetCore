@@ -11,6 +11,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
+using Services.Interfaces;
+using Models;
+using Services.Fakers;
+using Services.Fakers.Models;
 
 namespace Mvc
 {
@@ -28,6 +32,7 @@ namespace Mvc
         {
             services.AddControllersWithViews();
             services.AddDirectoryBrowser();
+            services.AddSingleton<ICrudServiceAsync<User>> (x => new CrudService<User>(new UserFaker(), 10));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

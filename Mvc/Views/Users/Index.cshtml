@@ -1,0 +1,37 @@
+@model IEnumerable<Models.User>
+
+@{
+    var title = "Users";
+    //ViewData["Title"] = title;
+    ViewBag.Title = title;
+}
+
+<h2>@(string.IsNullOrWhiteSpace(title) ? "none" : title)</h2>
+
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayName(nameof(Models.User.Login));
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Password);
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(_ => item.Login);
+                    </td>
+                    <td>
+                        @Html.DisplayFor(_ => item.Password);
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
