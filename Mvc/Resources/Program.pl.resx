@@ -129,4 +129,12 @@
     <value>Hasło</value>
     <comment/>
   </data>
+  <data name="Search" xml:space="preserve">
+    <value>Szukaj</value>
+    <comment/>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>Rola</value>
+    <comment/>
+  </data>
 </root>

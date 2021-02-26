@@ -129,4 +129,12 @@
     <value>Password</value>
     <comment/>
   </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+    <comment/>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>Role</value>
+    <comment/>
+  </data>
 </root>

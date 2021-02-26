@@ -15,9 +15,15 @@ namespace Mvc.Controllers
             Service = service;
         }
 
-        public async Task<IActionResult> Index() {
+        public async Task<IActionResult> Index(string search, Roles? roles) {
             var users = await Service.ReadAsync();
-            //string.Join(", ", users.Select(x => x.Login));
+
+            if(!string.IsNullOrEmpty(search)) {
+                users = users.Where(x => x.Login.Contains(search, System.StringComparison.InvariantCultureIgnoreCase));
+            }
+            if(roles.HasValue)
+                users = users.Where(x => x.Role.HasFlag(roles.Value));
+
             return View(users);
         }
 

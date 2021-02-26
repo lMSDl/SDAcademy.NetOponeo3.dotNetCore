@@ -10,11 +10,24 @@
     var title = "Users";
     //ViewData["Title"] = title;
     ViewBag.Title = title;
+
+    var searchRoleList = Enum.GetValues<Models.Roles>().Select(x => new SelectListItem(x.ToString(), x.ToString())).ToList();
+        searchRoleList.Insert(0, new SelectListItem(string.Empty, string.Empty));
 }
 
 <h2>@(string.IsNullOrWhiteSpace(title) ? "none" : title)</h2>
 
 <div>
+
+    @* <form> *@
+       @using(@Html.BeginForm()) {
+            @Localizer["Login"] @Html.TextBox("search")<br>
+            @Localizer["Role"] @Html.DropDownList("roles", searchRoleList)<br>
+            <input type="submit" value=@(Localizer["Search"]) />
+       }
+    @* </form> *@
+
+
     <table class="table">
         <thead>
             <tr>
@@ -30,6 +43,9 @@
                     @* @ViewLocalizer[Html.DisplayNameFor(model => model.Password)] *@
                     @* @ViewLocalizer["<i>Hello, {0}</i>", nameof(Models.User.Password)] *@
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Role, Localizer)
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -44,6 +60,9 @@
                     </td>
                     <td>
                         @Html.DisplayFor(_ => item.Password)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(_ => item.Role)
                     </td>
                 </tr>
             }
