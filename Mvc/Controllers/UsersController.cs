@@ -50,6 +50,26 @@ namespace Mvc.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> Edit(int? id) {
+            if(!id.HasValue)
+                return BadRequest();
+
+            var item = await Service.ReadAsync(id.Value);
+            if(item == null)
+                return NotFound();
+
+            return View(item);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, [Bind("Login", "Role")]User user, string password) {
+            //user = await Service.ReadAsync(id);
+            user.Password = password;
+            await Service.UpdateAsync(id, user);
+
+            return RedirectToAction(nameof(Index));
+        }
+
         public async Task<string> Search(string id, int limit = int.MaxValue) {
             // if(id == null)
             //     return await Index();

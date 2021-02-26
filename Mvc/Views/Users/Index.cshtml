@@ -38,6 +38,7 @@
                     @* @await Html.PartialAsync("/Views/Home/_UserDetails.cshtml", item) *@
                     <td>
                         <a asp-action="Delete" asp-route-id=@item.Id>@Localizer["Delete"]</a> |
+                        @Html.ActionLink(Localizer["Edit"], "Edit", new {id = item.Id})
                     </td>
                 </tr>
             }
