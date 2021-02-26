@@ -22,10 +22,12 @@
                     @Html.DisplayNameFor(model => model.Id)
                 </th>
                 <th>
-                    @Html.DisplayName(Localizer[nameof(Models.User.Login)])
+                    @Html.DisplayName(nameof(Models.User.Login), Localizer)
+                    @* @Html.DisplayName(Localizer[nameof(Models.User.Login)]) *@
                 </th>
                 <th>
-                    @ViewLocalizer[Html.DisplayNameFor(model => model.Password)]
+                    @Html.DisplayNameFor(model => model.Password, ViewLocalizer)
+                    @* @ViewLocalizer[Html.DisplayNameFor(model => model.Password)] *@
                     @* @ViewLocalizer["<i>Hello, {0}</i>", nameof(Models.User.Password)] *@
                 </th>
             </tr>
