@@ -1,0 +1,38 @@
+@model Models.User
+
+@{
+    ViewBag.Title = Localizer["Delete"];
+}
+
+
+<h1>@Localizer["DeleteConfirmation"]</h1>
+
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <partial name="_UserHeader" model="new Models.User()" />
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+                    <partial name="_UserDetails" for=@Model />
+                </tr>
+        </tbody>
+    </table>
+
+    <form asp-controller="Users" asp-action="DeleteUser" method="POST"> @* asp-antiforgery="false" >  *@
+        @* @Html.AntiForgeryToken() *@
+        <input type="hidden" asp-for=@Model.Id />
+        <input type="submit" value=@Localizer["Delete"] class="btn btn-default" />
+        <a asp-action="Index">@Localizer["Cancel"]</a>
+    </form>
+
+    @using (Html.BeginForm("DeleteUser", "Users"))
+    {
+        @Html.HiddenFor(x => x.Id)
+        <input type="submit" value=@Localizer["Delete"] class="btn btn-default" />
+        @Html.ActionLink(@Localizer["Cancel"], "Index")
+    }
+
+</div>

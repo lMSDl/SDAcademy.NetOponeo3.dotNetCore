@@ -17,6 +17,14 @@ namespace Mvc.Extensions
             return localizer[htmlHelper.DisplayNameFor(expression)];
         }
 
+        public static string DisplayNameFor<TModelItem, TResult>(this IHtmlHelper<TModelItem> htmlHelper, Expression<Func<TModelItem, TResult>> expression, IStringLocalizer localizer) {
+            return localizer[htmlHelper.DisplayNameFor(expression)];
+        }
+
+        public static LocalizedHtmlString DisplayNameFor<TModelItem, TResult>(this IHtmlHelper<TModelItem> htmlHelper, Expression<Func<TModelItem, TResult>> expression, IHtmlLocalizer localizer) {  
+            return localizer[htmlHelper.DisplayNameFor(expression)];
+        }
+
         public static string DisplayName(this IHtmlHelper htmlHelper, string expression, IStringLocalizer localizer) {
             return localizer[expression];
         }

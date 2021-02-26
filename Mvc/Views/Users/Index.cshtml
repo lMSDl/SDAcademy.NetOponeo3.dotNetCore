@@ -1,10 +1,5 @@
 @model IEnumerable<Models.User>
 
-@using Microsoft.Extensions.Localization
-@inject IStringLocalizer<Mvc.Program> Localizer
-
-@using Microsoft.AspNetCore.Mvc.Localization
-@inject IViewLocalizer ViewLocalizer
 
 @{
     var title = "Users";
@@ -31,38 +26,18 @@
     <table class="table">
         <thead>
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Id)
-                </th>
-                <th>
-                    @Html.DisplayName(nameof(Models.User.Login), Localizer)
-                    @* @Html.DisplayName(Localizer[nameof(Models.User.Login)]) *@
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Password, ViewLocalizer)
-                    @* @ViewLocalizer[Html.DisplayNameFor(model => model.Password)] *@
-                    @* @ViewLocalizer["<i>Hello, {0}</i>", nameof(Models.User.Password)] *@
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Role, Localizer)
-                </th>
+                @await Html.PartialAsync("_UserHeader", (Models.User)null)
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
                 <tr>
+                    @await Html.PartialAsync("_UserDetails", item)
+                    @* @await Html.PartialAsync("../Home/_UserDetails", item) *@
+                    @* @await Html.PartialAsync("/Views/Home/_UserDetails.cshtml", item) *@
                     <td>
-                        @Html.DisplayFor(_ => item.Id)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(_ => item.Login)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(_ => item.Password)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(_ => item.Role)
+                        <a asp-action="Delete" asp-route-id=@item.Id>@Localizer["Delete"]</a> |
                     </td>
                 </tr>
             }

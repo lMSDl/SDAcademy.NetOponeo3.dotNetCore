@@ -6,6 +6,7 @@ using Services.Interfaces;
 
 namespace Mvc.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public class UsersController : Controller
     {
         private ICrudServiceAsync<User> Service {get;}
@@ -25,6 +26,28 @@ namespace Mvc.Controllers
                 users = users.Where(x => x.Role.HasFlag(roles.Value));
 
             return View(users);
+        }
+
+        public async Task<IActionResult> Delete(int? id) {
+            if(!id.HasValue)
+                return BadRequest();
+
+            var item = await Service.ReadAsync(id.Value);
+            if(item == null)
+                return NotFound();
+
+            return View(item);
+        }
+
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUser(int? id) {
+            if(!id.HasValue)
+                return BadRequest();
+
+            await Service.DeleteAsync(id.Value);
+
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<string> Search(string id, int limit = int.MaxValue) {

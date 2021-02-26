@@ -137,4 +137,20 @@
     <value>Rola</value>
     <comment/>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Usuń</value>
+    <comment/>
+  </data>
+  <data name="DeleteConfirmation" xml:space="preserve">
+    <value>Czy chcesz to usunąć?</value>
+    <comment/>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Anuluj</value>
+    <comment/>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edycja</value>
+    <comment/>
+  </data>
 </root>

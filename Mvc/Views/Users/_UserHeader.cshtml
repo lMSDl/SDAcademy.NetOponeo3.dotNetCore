@@ -1,0 +1,20 @@
+@model Models.User
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer ViewLocalizer
+
+<th>
+    @Html.DisplayNameFor(model => model.Id)
+</th>
+<th>
+    @Html.DisplayName(nameof(Models.User.Login), Localizer)
+    @* @Html.DisplayName(Localizer[nameof(Models.User.Login)]) *@
+</th>
+<th>
+    @Html.DisplayNameFor(model => model.Password, ViewLocalizer)
+    @* @ViewLocalizer[Html.DisplayNameFor(model => model.Password)] *@
+    @* @ViewLocalizer["<i>Hello, {0}</i>", nameof(Models.User.Password)] *@
+</th>
+<th>
+    @Html.DisplayNameFor(model => model.Role, Localizer)
+</th>
