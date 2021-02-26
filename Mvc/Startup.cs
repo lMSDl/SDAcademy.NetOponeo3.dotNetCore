@@ -30,7 +30,20 @@ namespace Mvc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            var cultures = new [] {"en-Us", "pl"};
+            services.Configure<RequestLocalizationOptions>(options => {
+                options.SetDefaultCulture(cultures.First());
+                options.AddSupportedCultures(cultures);
+                options.AddSupportedUICultures(cultures);
+                //options.FallBackToParentCultures = true;
+            });
+
+            services.AddControllersWithViews()
+                .AddViewLocalization(/*Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix*/)
+                .AddDataAnnotationsLocalization(options => options.DataAnnotationLocalizerProvider = (type, factory) => factory.Create(typeof(Program)));
+
+
             services.AddDirectoryBrowser();
             services.AddSingleton<ICrudServiceAsync<User>> (x => new CrudService<User>(new UserFaker(), 10));
         }
@@ -60,6 +73,8 @@ namespace Mvc
                 FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "Download")),
                 RequestPath = "/Download"
             });
+
+            app.UseRequestLocalization();
 
             app.UseRouting();
 

@@ -1,5 +1,11 @@
 @model IEnumerable<Models.User>
 
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<Mvc.Program> Localizer
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer ViewLocalizer
+
 @{
     var title = "Users";
     //ViewData["Title"] = title;
@@ -13,10 +19,14 @@
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayName(nameof(Models.User.Login));
+                    @Html.DisplayNameFor(model => model.Id)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Password);
+                    @Html.DisplayName(Localizer[nameof(Models.User.Login)])
+                </th>
+                <th>
+                    @ViewLocalizer[Html.DisplayNameFor(model => model.Password)]
+                    @* @ViewLocalizer["<i>Hello, {0}</i>", nameof(Models.User.Password)] *@
                 </th>
             </tr>
         </thead>
@@ -25,10 +35,13 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(_ => item.Login);
+                        @Html.DisplayFor(_ => item.Id)
                     </td>
                     <td>
-                        @Html.DisplayFor(_ => item.Password);
+                        @Html.DisplayFor(_ => item.Login)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(_ => item.Password)
                     </td>
                 </tr>
             }
