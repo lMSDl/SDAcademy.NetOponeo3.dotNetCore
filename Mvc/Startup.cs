@@ -18,6 +18,7 @@ using Services.Fakers.Models;
 using FluentValidation.AspNetCore;
 using FluentValidation;
 using Models.Validators;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Mvc
 {
@@ -51,7 +52,15 @@ namespace Mvc
 
 
             services.AddDirectoryBrowser();
-            services.AddSingleton<ICrudServiceAsync<User>> (x => new CrudService<User>(new UserFaker(), 10));
+            services.AddSingleton<IUsersServiceAsync> (x => new UsersService(new UserFaker(), 10));
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(cookieOptions => {
+                cookieOptions.LoginPath = "/Login";
+                cookieOptions.LogoutPath = "/Login/Logout";
+                cookieOptions.AccessDeniedPath = "/";
+                cookieOptions.ExpireTimeSpan = TimeSpan.FromHours(1);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,6 +76,8 @@ namespace Mvc
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions {
@@ -84,7 +95,14 @@ namespace Mvc
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+            
+            app.Use(async (context, next) =>  {
+                    if(context.User.Claims.SingleOrDefault(x => x.Type == "Key")?.Value != Program.Key)
+                        context.Response.Cookies.Delete(".AspNetCore."+CookieAuthenticationDefaults.AuthenticationScheme, new Microsoft.AspNetCore.Http.CookieOptions {Secure = true});
+                    await next();
+            });
 
             app.UseEndpoints(endpoints =>
             {

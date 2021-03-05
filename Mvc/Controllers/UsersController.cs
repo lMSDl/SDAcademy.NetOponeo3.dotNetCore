@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Services.Interfaces;
@@ -7,27 +8,24 @@ using Services.Interfaces;
 namespace Mvc.Controllers
 {
     [AutoValidateAntiforgeryToken]
+    [Authorize(Roles = nameof(Roles.Admin))]
     public class UsersController : Controller
     {
-        private ICrudServiceAsync<User> Service {get;}
+        private IUsersServiceAsync Service {get;}
 
-        public UsersController(ICrudServiceAsync<User> service)
+        public UsersController(IUsersServiceAsync service)
         {
             Service = service;
         }
 
+        [Authorize(Roles = nameof(Roles.Read))]
         public async Task<IActionResult> Index(string search, Roles? roles) {
-            var users = await Service.ReadAsync();
-
-            if(!string.IsNullOrEmpty(search)) {
-                users = users.Where(x => x.Login.Contains(search, System.StringComparison.InvariantCultureIgnoreCase));
-            }
-            if(roles.HasValue)
-                users = users.Where(x => x.Role.HasFlag(roles.Value));
+            var users = await Service.FindAsync(search, roles);
 
             return View(users);
         }
 
+        [Authorize(Roles = nameof(Roles.Delete))]
         public async Task<IActionResult> Delete(int? id) {
             if(!id.HasValue)
                 return BadRequest();
@@ -40,6 +38,7 @@ namespace Mvc.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = nameof(Roles.Delete))]
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteUser(int? id) {
             if(!id.HasValue)
@@ -50,12 +49,14 @@ namespace Mvc.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        
-        public IActionResult Add() {
+
+        [Authorize(Roles = nameof(Roles.Create))]
+            public IActionResult Add() {
             return View(new User());
         }
 
         [HttpPost]
+        [Authorize(Roles = nameof(Roles.Create))]
         public async Task<IActionResult> Add(User user) {
             if(!ModelState.IsValid) {
                 return View(user);
@@ -72,7 +73,9 @@ namespace Mvc.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Edit(int? id) {
+
+        [Authorize(Roles = nameof(Roles.Update))]
+            public async Task<IActionResult> Edit(int? id) {
             if(!id.HasValue)
                 return BadRequest();
 
@@ -84,6 +87,7 @@ namespace Mvc.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = nameof(Roles.Update))]
         public async Task<IActionResult> Edit(int id, User user) {
             if(!ModelState.IsValid) {
                 return View(user);
@@ -102,6 +106,7 @@ namespace Mvc.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = nameof(Roles.Read))]
         public async Task<string> Search(string id, int limit = int.MaxValue) {
             // if(id == null)
             //     return await Index();

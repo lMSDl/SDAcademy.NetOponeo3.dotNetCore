@@ -17,7 +17,7 @@ namespace Services.Fakers
             _index = Entities.Max(x => x.Id);
         }
 
-        private ICollection<T> Entities {get;}
+        protected ICollection<T> Entities {get;}
         private int _index;
 
         public int Create(T entity)

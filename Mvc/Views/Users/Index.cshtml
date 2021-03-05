@@ -41,8 +41,12 @@
                     @* @await Html.PartialAsync("../Home/_UserDetails", item) *@
                     @* @await Html.PartialAsync("/Views/Home/_UserDetails.cshtml", item) *@
                     <td>
-                        <a asp-action="Delete" asp-route-id=@item.Id>@Localizer["Delete"]</a> |
-                        @Html.ActionLink(Localizer["Edit"], "Edit", new {id = item.Id})
+                        @if(Context.User.IsInRole(nameof(Models.Roles.Delete))) {
+                            <a asp-action="Delete" asp-route-id=@item.Id>@Localizer["Delete"]</a>
+                        }
+                        @if(Context.User.IsInRole(nameof(Models.Roles.Update))) {
+                            @Html.ActionLink(Localizer["Edit"], "Edit", new {id = item.Id})
+                        }
                     </td>
                 </tr>
             }

@@ -11,6 +11,8 @@ namespace Mvc
 {
     public class Program
     {
+        public static string Key {get;} = Guid.NewGuid().ToString();
+
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
