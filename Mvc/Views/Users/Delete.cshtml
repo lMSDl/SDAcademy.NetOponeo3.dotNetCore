@@ -28,7 +28,7 @@
         <a asp-action="Index">@Localizer["Cancel"]</a>
     </form>
 
-    @using (Html.BeginForm("DeleteUser", "Users"))
+    @using (Html.BeginForm(/*"DeleteUser", "Users"*/))
     {
         @Html.HiddenFor(x => x.Id)
         <input type="submit" value=@Localizer["Delete"] class="btn btn-default" />

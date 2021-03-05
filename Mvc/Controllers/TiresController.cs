@@ -7,13 +7,10 @@ using Services.Interfaces;
 
 namespace Mvc.Controllers
 {
-    public class TiresController : Controller
+    public class TiresController : BaseController<Tire, ICrudServiceAsync<Tire>>
     {
-        private ICrudServiceAsync<Tire> Service {get;}
-
-        public TiresController(ICrudServiceAsync<Tire> service)
+        public TiresController(ICrudServiceAsync<Tire> service) : base(service)
         {
-            Service = service;
         }
 
         public async Task<IActionResult> Index(TireSeason? season) {
@@ -24,28 +21,6 @@ namespace Mvc.Controllers
                 tires = tires.Where(x => x.Season.Equals(season));
             
             return View(tires);
-        }
-
-        public async Task<IActionResult> Delete(int? id) {
-            if(!id.HasValue)
-                return BadRequest();
-
-            var item = await Service.ReadAsync(id.Value);
-            if(item == null)
-                return NotFound();
-
-            return View(item);
-        }
-        
-        [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteTire(int? id) {
-            if(!id.HasValue)
-                return BadRequest();
-
-            await Service.DeleteAsync(id.Value);
-
-            return RedirectToAction(nameof(Index));
         }
         
         public IActionResult Add() {

@@ -12,14 +12,10 @@ using Services.Interfaces;
 namespace Mvc.Controllers
 {
 
-    [Authorize]
-    public class LoginController : Controller
+    public class LoginController : BaseController<User, IUsersServiceAsync>
     {
-        private IUsersServiceAsync Service {get;}
-
-        public LoginController(IUsersServiceAsync service)
+        public LoginController(IUsersServiceAsync service) : base(service)
         {
-            Service = service;
         }
 
         [AllowAnonymous]
@@ -57,6 +53,13 @@ namespace Mvc.Controllers
         public async Task<IActionResult> Logout() {
             await HttpContext.SignOutAsync();
             return Redirect("/");
+        }
+
+        [NonAction]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public override Task<IActionResult> Delete(int? id)
+        {
+            return base.Delete(id);
         }
     }
 }

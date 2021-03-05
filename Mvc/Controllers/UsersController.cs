@@ -7,15 +7,11 @@ using Services.Interfaces;
 
 namespace Mvc.Controllers
 {
-    [AutoValidateAntiforgeryToken]
     [Authorize(Roles = nameof(Roles.Admin))]
-    public class UsersController : Controller
+    public class UsersController : BaseController<User, IUsersServiceAsync>
     {
-        private IUsersServiceAsync Service {get;}
-
-        public UsersController(IUsersServiceAsync service)
+        public UsersController(IUsersServiceAsync service) : base(service)
         {
-            Service = service;
         }
 
         [Authorize(Roles = nameof(Roles.Read))]
@@ -25,29 +21,7 @@ namespace Mvc.Controllers
             return View(users);
         }
 
-        [Authorize(Roles = nameof(Roles.Delete))]
-        public async Task<IActionResult> Delete(int? id) {
-            if(!id.HasValue)
-                return BadRequest();
-
-            var item = await Service.ReadAsync(id.Value);
-            if(item == null)
-                return NotFound();
-
-            return View(item);
-        }
-
-        [HttpPost]
-        [Authorize(Roles = nameof(Roles.Delete))]
-        //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteUser(int? id) {
-            if(!id.HasValue)
-                return BadRequest();
-
-            await Service.DeleteAsync(id.Value);
-
-            return RedirectToAction(nameof(Index));
-        }
+        
 
 
         [Authorize(Roles = nameof(Roles.Create))]
