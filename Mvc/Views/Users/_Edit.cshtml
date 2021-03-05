@@ -1,0 +1,29 @@
+@model Models.User
+
+<div class="row">
+    <div class="col-md-4">
+        @using (Html.BeginForm()) {
+            @Html.HiddenFor(x => x.Id)
+
+            <div class="form-group">
+                <label asp-for="Login" ></label>
+                <br>
+                <input asp-for="Login" />
+            </div>
+
+            <div class="form-group">
+                @Html.Label(Localizer[nameof(Models.User.Password)])<br>
+                @Html.EditorFor(x => x.Password)
+            </div>
+            
+            <div class="form-group">
+                @Html.Label(Localizer[nameof(Models.User.Role)])<br>
+                @Html.EditorFor(x => x.Role)
+            </div>
+
+            <div>
+                <input type="submit"/>
+            </div>
+        }
+    </div>
+</div>

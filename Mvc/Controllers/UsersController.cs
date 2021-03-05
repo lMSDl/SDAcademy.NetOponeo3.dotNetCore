@@ -50,6 +50,17 @@ namespace Mvc.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        
+        public IActionResult Add() {
+            return View(new User());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Add(User user) {
+            await Service.CreateAsync(user);
+            return RedirectToAction(nameof(Index));
+        }
+
         public async Task<IActionResult> Edit(int? id) {
             if(!id.HasValue)
                 return BadRequest();

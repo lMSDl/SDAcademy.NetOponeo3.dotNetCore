@@ -12,12 +12,16 @@
 
 <h2>@(string.IsNullOrWhiteSpace(title) ? "none" : title)</h2>
 
+@Html.ActionLink(Localizer["Add"], "Add")
+
 <div>
 
     @* <form> *@
        @using(@Html.BeginForm()) {
-            @Localizer["Login"] @Html.TextBox("search")<br>
-            @Localizer["Role"] @Html.DropDownList("roles", searchRoleList)<br>
+            @Localizer["Login"]<br>
+            @Html.TextBox("search")<br>
+            @Localizer["Role"]<br>
+            @Html.DropDownList("roles", searchRoleList)<br>
             <input type="submit" value=@(Localizer["Search"]) />
        }
     @* </form> *@
