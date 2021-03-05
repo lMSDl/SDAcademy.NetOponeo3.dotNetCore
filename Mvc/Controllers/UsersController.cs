@@ -57,6 +57,17 @@ namespace Mvc.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Add(User user) {
+            if(!ModelState.IsValid) {
+                return View(user);
+            }
+
+            var users = await Service.ReadAsync();
+            if(users.Any(x => x.Login == user.Login))
+            {
+                ModelState.AddModelError(nameof(user.Login), "Login already exists!");
+                return View(user);
+            }
+
             await Service.CreateAsync(user);
             return RedirectToAction(nameof(Index));
         }
@@ -73,9 +84,19 @@ namespace Mvc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Login", "Role")]User user, string password) {
-            //user = await Service.ReadAsync(id);
-            user.Password = password;
+        public async Task<IActionResult> Edit(int id, User user) {
+            if(!ModelState.IsValid) {
+                return View(user);
+            }
+
+            var users = await Service.ReadAsync();
+            if(users.Where(x => x.Id != id).Any(x => x.Login == user.Login))
+            {
+                //return BadRequest(ModelState);
+                ModelState.AddModelError(nameof(user.Login), "Login already exists!");
+                return View(user);
+            }
+
             await Service.UpdateAsync(id, user);
 
             return RedirectToAction(nameof(Index));

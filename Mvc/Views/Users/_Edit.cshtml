@@ -9,21 +9,26 @@
                 <label asp-for="Login" ></label>
                 <br>
                 <input asp-for="Login" />
+                <span asp-validation-for="Login" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 @Html.Label(Localizer[nameof(Models.User.Password)])<br>
                 @Html.EditorFor(x => x.Password)
+                @Html.ValidationMessageFor(x => x.Password)
             </div>
             
             <div class="form-group">
                 @Html.Label(Localizer[nameof(Models.User.Role)])<br>
                 @Html.EditorFor(x => x.Role)
+                @Html.ValidationMessageFor(x => x.Role)
             </div>
 
             <div>
                 <input type="submit"/>
             </div>
+
+            @Html.ValidationSummary()
         }
     </div>
 </div>

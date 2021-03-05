@@ -15,6 +15,9 @@ using Services.Interfaces;
 using Models;
 using Services.Fakers;
 using Services.Fakers.Models;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using Models.Validators;
 
 namespace Mvc
 {
@@ -41,7 +44,10 @@ namespace Mvc
 
             services.AddControllersWithViews()
                 .AddViewLocalization(/*Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix*/)
-                .AddDataAnnotationsLocalization(options => options.DataAnnotationLocalizerProvider = (type, factory) => factory.Create(typeof(Program)));
+                .AddDataAnnotationsLocalization(options => options.DataAnnotationLocalizerProvider = (type, factory) => factory.Create(typeof(Program)))
+                .AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining<UserValidator>());
+
+            //services.AddTransient<IValidator<User>, UserValidator>();
 
 
             services.AddDirectoryBrowser();
