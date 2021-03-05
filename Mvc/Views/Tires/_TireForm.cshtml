@@ -1,0 +1,45 @@
+﻿@model Models.Tire
+
+<div class="row">
+    <div class="col-md-4">
+        @using (Html.BeginForm()) {
+            @Html.HiddenFor(x => x.Id)
+
+            <div class="form-group">
+                @Html.Label(Localizer[nameof(Models.Tire.Producer)])<br>
+                @Html.EditorFor(x => x.Producer)
+                @Html.ValidationMessageFor(x => x.Producer)
+            </div>
+            
+            <div class="form-group">
+                @Html.Label(Localizer[nameof(Models.Tire.Season)])<br>
+                @Html.EditorFor(x => x.Season)
+                @Html.ValidationMessageFor(x => x.Season)
+            </div>
+            
+            <div class="form-group">
+                @Html.Label(Localizer[nameof(Models.Tire.Width)])<br>
+                @Html.EditorFor(x => x.Width)
+                @Html.ValidationMessageFor(x => x.Width)
+            </div>
+            
+            <div class="form-group">
+                @Html.Label(Localizer[nameof(Models.Tire.Profile)])<br>
+                @Html.EditorFor(x => x.Profile)
+                @Html.ValidationMessageFor(x => x.Profile)
+            </div>
+            
+            <div class="form-group">
+                @Html.Label(Localizer[nameof(Models.Tire.Diameter)])<br>
+                @Html.EditorFor(x => x.Diameter)
+                @Html.ValidationMessageFor(x => x.Diameter)
+            </div>
+
+            <div>
+                <input type="submit"/>
+            </div>
+            
+            @Html.ValidationSummary()
+        }
+    </div>
+</div>

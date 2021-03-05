@@ -153,4 +153,22 @@
     <value>Edycja</value>
     <comment/>
   </data>
+  <data name="Producer" xml:space="preserve">
+    <value>Producent</value>
+  </data>
+  <data name="Season" xml:space="preserve">
+    <value>Sezon</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Szerokość</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="Diameter" xml:space="preserve">
+    <value>Średnica</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Dodaj</value>
+  </data>
 </root>

@@ -153,4 +153,22 @@
     <value>Edit</value>
     <comment/>
   </data>
+  <data name="Producer" xml:space="preserve">
+    <value>Producer</value>
+  </data>
+  <data name="Season" xml:space="preserve">
+    <value>Season</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Width</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Diameter" xml:space="preserve">
+    <value>Diameter</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
 </root>

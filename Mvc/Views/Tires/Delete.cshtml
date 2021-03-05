@@ -1,0 +1,38 @@
+﻿@model Models.Tire
+
+@{
+    ViewBag.Title = Localizer["Delete"];
+}
+
+
+<h1>@Localizer["DeleteConfirmation"]</h1>
+
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <partial name="_TireHeader" model="new Models.Tire()" />
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+                    <partial name="_TireDetails" for=@Model />
+                </tr>
+        </tbody>
+    </table>
+
+    <form asp-controller="Tires" asp-action="DeleteTire" method="POST"> @* asp-antiforgery="false" >  *@
+        @* @Html.AntiForgeryToken() *@
+        <input type="hidden" asp-for=@Model.Id />
+        <input type="submit" value=@Localizer["Delete"] class="btn btn-default" />
+        <a asp-action="Index">@Localizer["Cancel"]</a>
+    </form>
+
+    @using (Html.BeginForm("DeleteTire", "Tires"))
+    {
+        @Html.HiddenFor(x => x.Id)
+        <input type="submit" value=@Localizer["Delete"] class="btn btn-default" />
+        @Html.ActionLink(@Localizer["Cancel"], "Index")
+    }
+
+</div>

@@ -1,0 +1,20 @@
+﻿@model Models.Tire
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer ViewLocalizer
+
+<th>
+    @Localizer[Html.DisplayNameFor(model => model.Producer)]
+</th>
+<th>
+    @Localizer[Html.DisplayNameFor(model => model.Season)]
+</th>
+<th>
+    @Localizer[Html.DisplayNameFor(model => model.Width)]
+</th>
+<th>
+    @Localizer[Html.DisplayNameFor(model => model.Profile)]
+</th>
+<th>
+    @Localizer[Html.DisplayNameFor(model => model.Diameter)]
+</th>

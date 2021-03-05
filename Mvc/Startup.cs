@@ -53,7 +53,8 @@ namespace Mvc
 
             services.AddDirectoryBrowser();
             services.AddSingleton<IUsersServiceAsync> (x => new UsersService(new UserFaker(), 10));
-
+            services.AddSingleton<ICrudServiceAsync<Tire>> (x => new CrudService<Tire>(new TireFaker(), 10));
+            
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(cookieOptions => {
                 cookieOptions.LoginPath = "/Login";
@@ -61,6 +62,7 @@ namespace Mvc
                 cookieOptions.AccessDeniedPath = "/";
                 cookieOptions.ExpireTimeSpan = TimeSpan.FromHours(1);
             });
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -76,8 +78,6 @@ namespace Mvc
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions {

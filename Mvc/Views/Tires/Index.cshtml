@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Models.Tire>
+
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<Mvc.Program> Localizer
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer ViewLocalizer
+
+@{
+    var title = "Tires";
+    //ViewData["Title"] = title;
+    ViewBag.Title = title;
+
+    var searchSeasonList = Enum.GetValues<Models.TireSeason>().Select(x => new SelectListItem(x.ToString(), x.ToString())).ToList();
+    searchSeasonList.Insert(0, new SelectListItem(string.Empty, string.Empty));
+}
+
+<h2>@(string.IsNullOrWhiteSpace(title) ? "none" : title)</h2>
+
+@* <form> *@
+       @using(@Html.BeginForm()) {
+            @Localizer["Season"] @Html.DropDownList("season", searchSeasonList)<br>
+            <input type="submit" value=@(Localizer["Search"]) />
+       }
+    @* </form> *@
+
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                @await Html.PartialAsync("_TireHeader", (Models.Tire)null)
+            </tr>
+        </thead>
+        <tbody>
+            @Html.ActionLink(Localizer["Add"], "Add")
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @await Html.PartialAsync("_TireDetails", item)
+                    
+                    <td>
+                        <a asp-action="Delete" asp-route-id=@item.Id>@Localizer["Delete"]</a> |
+                        @Html.ActionLink(Localizer["Edit"], "Edit", new {id = item.Id})
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,11 @@
+﻿@model Models.Tire
+
+@{
+    ViewBag.Title = Localizer["Edit"];
+}
+
+@await Html.PartialAsync("_TireForm", Model)
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
