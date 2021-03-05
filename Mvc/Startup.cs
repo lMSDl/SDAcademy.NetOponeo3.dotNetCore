@@ -19,6 +19,8 @@ using FluentValidation.AspNetCore;
 using FluentValidation;
 using Models.Validators;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Mvc.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Mvc
 {
@@ -47,13 +49,10 @@ namespace Mvc
                 .AddViewLocalization(/*Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix*/)
                 .AddDataAnnotationsLocalization(options => options.DataAnnotationLocalizerProvider = (type, factory) => factory.Create(typeof(Program)))
                 .AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining<UserValidator>());
-
             //services.AddTransient<IValidator<User>, UserValidator>();
 
 
             services.AddDirectoryBrowser();
-            services.AddSingleton<IUsersServiceAsync> (x => new UsersService(new UserFaker(), 10));
-            services.AddSingleton<ICrudServiceAsync<Tire>> (x => new CrudService<Tire>(new TireFaker(), 10));
             
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(cookieOptions => {
@@ -63,11 +62,15 @@ namespace Mvc
                 cookieOptions.ExpireTimeSpan = TimeSpan.FromHours(1);
             });
             
+            //services.AddFakerServices();
+            services.AddMsSqlServices(Configuration.GetConnectionString("MsSqlConnectionString"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DbContext dbContext)
         {
+            dbContext.Database.Migrate();
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
