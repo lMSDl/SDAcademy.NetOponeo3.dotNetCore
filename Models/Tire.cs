@@ -5,7 +5,7 @@ namespace Models
 {
     public class Tire : Entity
     {
-        public string Producer {get; set;} 
+        public Producer Producer {get; set;} 
         public TireSeason Season {get; set;} 
         public int Width {get; set;} 
         public int Profile {get; set;} 

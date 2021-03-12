@@ -9,8 +9,6 @@ namespace Models.Validators
         {
             RuleFor(x => x.Producer)
                 .NotNull()
-                .NotEmpty()
-                .Length(2, 128)
                 .When(x => x.Id == 0);
 
             RuleFor(x => x.Season)

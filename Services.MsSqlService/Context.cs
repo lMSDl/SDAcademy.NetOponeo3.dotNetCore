@@ -27,6 +27,7 @@ namespace Services.MsSqlService
             modelBuilder.ApplyConfiguration(new UsersConfiguration());
             modelBuilder.ApplyConfiguration(new OrderConfiguration());
             modelBuilder.ApplyConfiguration(new TireConfiguration());
+            modelBuilder.ApplyConfiguration(new ProducerConfiguration());
             base.OnModelCreating(modelBuilder);
         }
 

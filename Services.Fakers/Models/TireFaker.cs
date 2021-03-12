@@ -6,7 +6,7 @@ namespace Services.Fakers.Models
     {
         public TireFaker()
         {
-            RuleFor(x => x.Producer, x => x.Company.CompanyName());
+            RuleFor(x => x.Producer, x => new Producer {Name = x.Company.CompanyName()});
             RuleFor(x => x.Season, x => x.PickRandom<TireSeason>());
             RuleFor(x => x.Width, x => x.Random.Int(6, 355));
             RuleFor(x => x.Profile, x => x.Random.Int(35, 80));

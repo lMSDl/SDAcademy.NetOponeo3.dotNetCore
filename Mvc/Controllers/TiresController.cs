@@ -80,7 +80,7 @@ namespace Mvc.Controllers
             //     return await Index();
 
             var users = await Service.ReadAsync();
-            return string.Join(", ", users.Take(limit).Select(x => x.Producer).Where(x => x.Contains(id)));
+            return string.Join(", ", users.Take(limit).Select(x => x.Producer.Name).Where(x => x.Contains(id)));
         }
     }
 }

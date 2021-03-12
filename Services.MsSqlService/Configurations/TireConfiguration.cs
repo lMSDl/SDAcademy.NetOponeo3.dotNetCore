@@ -8,8 +8,7 @@ namespace Services.MsSqlService.Configurations
     {
         public void Configure(EntityTypeBuilder<Tire> builder)
         {
-            
-
+            builder.HasOne(x => x.Producer).WithMany(x => x.Tires).IsRequired();
         }
     }
 }
