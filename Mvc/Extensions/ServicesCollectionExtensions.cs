@@ -11,7 +11,7 @@ namespace Mvc.Extensions
     public static class ServiceCollectionExtensions
     {   
         public static IServiceCollection AddMsSqlServices(this IServiceCollection services, string connectionString) {
-                services.AddDbContext<DbContext, Context>(options => options.UseSqlServer(connectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
+                services.AddDbContext<DbContext, Context>(options => options.UseSqlServer(connectionString)/*.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)*/);
                 services.AddScoped<IUsersServiceAsync, Services.MsSqlService.Services.UsersService>();
                 return services;
         }

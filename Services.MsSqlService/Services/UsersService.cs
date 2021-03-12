@@ -9,7 +9,7 @@ namespace Services.MsSqlService.Services
 {
     public class UsersService : CrudService<User>, IUsersServiceAsync
     {
-        public UsersService(DbContext context) : base(context)
+        public UsersService(DbContextOptions<Context> options) : base(options)
         {
         }
 
@@ -18,19 +18,23 @@ namespace Services.MsSqlService.Services
             if(string.IsNullOrEmpty(search) && !role.HasValue)
                 return await ReadAsync();
 
-            var query = Context.Set<User>().AsNoTracking();    
-            if(!string.IsNullOrEmpty(search)) {
-                query = query.Where(x => x.Login.Contains(search, System.StringComparison.InvariantCultureIgnoreCase));
-            }
-            if(role.HasValue)
-                query = query.Where(x => x.Role.HasFlag(role.Value));
+            using(var context = new Context(Options)) {
+                var query = context.Set<User>().AsNoTracking();    
+                if(!string.IsNullOrEmpty(search)) {
+                    query = query.Where(x => x.Login.Contains(search, System.StringComparison.InvariantCultureIgnoreCase));
+                }
+                if(role.HasValue)
+                    query = query.Where(x => x.Role.HasFlag(role.Value));
 
-            return await query.ToListAsync();
+                return await query.ToListAsync();
+            }
         }
 
-        public Task<User> ReadByLoginAsync(string login)
+        public async Task<User> ReadByLoginAsync(string login)
         {
-            return Context.Set<User>().SingleOrDefaultAsync(x => x.Login == login);
+            using(var context = new Context(Options)) {
+                return await context.Set<User>().AsNoTracking().SingleOrDefaultAsync(x => x.Login == login);
+            }
         }
     }
 }

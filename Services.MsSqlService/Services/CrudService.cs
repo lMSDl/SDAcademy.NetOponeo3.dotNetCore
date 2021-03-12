@@ -8,45 +8,55 @@ namespace Services.MsSqlService.Services
 {
     public class CrudService<T> : ICrudServiceAsync<T> where T : Entity
     {
-        protected DbContext Context {get;}
+        protected DbContextOptions<Context> Options {get;}
 
-        public CrudService(DbContext context)
+        public CrudService(DbContextOptions<Context> options)
         {
-            Context = context;
+            Options = options;
         }
 
         public async Task<int> CreateAsync(T entity)
         {
-            var entry = await Context.AddAsync(entity);
-            await Context.SaveChangesAsync();
-            return entry.Entity.Id;
+            using(var context = new Context(Options)) {
+                var entry = await context.AddAsync(entity);
+                await context.SaveChangesAsync();
+                return entry.Entity.Id;
+            }
         }
 
         public async Task DeleteAsync(int id)
         {
-            var entity = await Context.Set<T>().FindAsync(id);
-            Context.Set<T>().Remove(entity);
-            //Context.Set<T>().Remove(new User {Id = id});
-            await Context.SaveChangesAsync();
+            using(var context = new Context(Options)) {
+                var entity = await context.Set<T>().FindAsync(id);
+                context.Set<T>().Remove(entity);
+                //Context.Set<T>().Remove(new User {Id = id});
+                await context.SaveChangesAsync();
+            }
         }
 
         public async Task<T> ReadAsync(int id)
         {
-            return await Context.Set<T>().FindAsync(id);
+            using(var context = new Context(Options)) {
+                return await context.Set<T>().FindAsync(id);
+            }
         }
 
         public async Task<IEnumerable<T>> ReadAsync()
         {
-            return await Context.Set<T>().ToListAsync();
+            using(var context = new Context(Options)) {
+                return await context.Set<T>().AsNoTracking().ToListAsync();
+            }
         }
 
-        public Task UpdateAsync(int id, T entity)
+        public async Task UpdateAsync(int id, T entity)
         {
-            entity.Id = id;
-            Context.Attach(entity);
-            Context.Entry(entity).State = EntityState.Modified;
-            //Context.Entry(entity).Property(x => x.Id).IsModified = false;
-            return Context.SaveChangesAsync();
+            using(var context = new Context(Options)) {
+                entity.Id = id;
+                context.Attach(entity);
+                context.Entry(entity).State = EntityState.Modified;
+                //Context.Entry(entity).Property(x => x.Id).IsModified = false;
+                await context.SaveChangesAsync();
+            }
         }
     }
 }
