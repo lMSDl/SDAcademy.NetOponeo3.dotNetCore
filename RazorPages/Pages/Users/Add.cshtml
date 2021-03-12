@@ -1,0 +1,8 @@
+@page
+@model AddOrEditModel
+
+@{
+    ViewBag.Title = "Add";
+}
+
+@await Html.PartialAsync("_Edit", Model.Entity)

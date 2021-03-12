@@ -1,0 +1,41 @@
+@page
+@model IndexModel
+
+@{
+    var title = "Users";
+    ViewBag.Title = title;
+
+    var searchRoleList = Enum.GetValues<Models.Roles>().Select(x => new SelectListItem(x.ToString(), x.ToString())).ToList();
+        searchRoleList.Insert(0, new SelectListItem(string.Empty, string.Empty));
+}
+
+<h2>@(string.IsNullOrWhiteSpace(title) ? "none" : title)</h2>
+
+<a asp-page="./Add">Add</a>
+
+<div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                @await Html.PartialAsync("_UserHeader", (Models.User)null)
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in await Model.Service.ReadAsync())
+            {
+                <tr>
+                    @await Html.PartialAsync("_UserDetails", item)
+                    <td>
+                        @* @if(Context.User.IsInRole(nameof(Models.Roles.Delete))) { *@
+                            <a asp-page="./Delete" asp-route-id=@item.Id>Delete</a>
+                        @* } *@
+                        @* @if(Context.User.IsInRole(nameof(Models.Roles.Update))) { *@
+                            <a asp-page="./Edit" asp-route-id=@item.Id>Edit</a>
+                        @* } *@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
