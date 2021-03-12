@@ -13,6 +13,13 @@ namespace Services.MsSqlService.Services
         {
         }
 
+        // public override async Task<User> ReadAsync(int id)
+        // {
+        //     using(var context = new Context(Options)) {
+        //         return await context.Set<User>().AsNoTracking().Include(x => x.Orders).SingleOrDefaultAsync(x => x.Id == id);
+        //     }
+        // }
+
         public async Task<IEnumerable<User>> FindAsync(string search, Roles? role)
         {
             if(string.IsNullOrEmpty(search) && !role.HasValue)

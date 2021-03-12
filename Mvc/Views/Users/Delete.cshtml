@@ -21,7 +21,7 @@
         </tbody>
     </table>
 
-    <form asp-controller="Users" asp-action="DeleteUser" method="POST"> @* asp-antiforgery="false" >  *@
+    <form  method="POST"> @*asp-controller="Users" asp-action="DeleteUser" asp-antiforgery="false" >  *@
         @* @Html.AntiForgeryToken() *@
         <input type="hidden" asp-for=@Model.Id />
         <input type="submit" value=@Localizer["Delete"] class="btn btn-default" />

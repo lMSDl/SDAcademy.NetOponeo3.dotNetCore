@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Services.MsSqlService;
 
 namespace Services.MsSqlService.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20210312092815_AddOrders")]
+    partial class AddOrders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,33 +35,6 @@ namespace Services.MsSqlService.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Order");
-                });
-
-            modelBuilder.Entity("Models.Tire", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Diameter")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Producer")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Profile")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Season")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Width")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Tire");
                 });
 
             modelBuilder.Entity("Models.User", b =>
@@ -95,21 +70,6 @@ namespace Services.MsSqlService.Migrations
                         });
                 });
 
-            modelBuilder.Entity("OrderTire", b =>
-                {
-                    b.Property<int>("OrdersId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TiresId")
-                        .HasColumnType("int");
-
-                    b.HasKey("OrdersId", "TiresId");
-
-                    b.HasIndex("TiresId");
-
-                    b.ToTable("OrderTire");
-                });
-
             modelBuilder.Entity("Models.Order", b =>
                 {
                     b.HasOne("Models.User", "User")
@@ -119,21 +79,6 @@ namespace Services.MsSqlService.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("OrderTire", b =>
-                {
-                    b.HasOne("Models.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrdersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Models.Tire", null)
-                        .WithMany()
-                        .HasForeignKey("TiresId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

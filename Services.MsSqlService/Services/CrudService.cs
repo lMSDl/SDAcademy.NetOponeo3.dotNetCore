@@ -34,7 +34,7 @@ namespace Services.MsSqlService.Services
             }
         }
 
-        public async Task<T> ReadAsync(int id)
+        public virtual async Task<T> ReadAsync(int id)
         {
             using(var context = new Context(Options)) {
                 return await context.Set<T>().FindAsync(id);

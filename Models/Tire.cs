@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Models
 {
@@ -8,7 +9,9 @@ namespace Models
         public TireSeason Season {get; set;} 
         public int Width {get; set;} 
         public int Profile {get; set;} 
-        public int Diameter {get; set;} 
+        public int Diameter {get; set;}
+
+        public IEnumerable<Order> Orders {get; set;}
     }
 
     public enum TireSeason

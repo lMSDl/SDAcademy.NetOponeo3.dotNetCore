@@ -12,8 +12,9 @@ namespace Services.MsSqlService
         public Context() {
         }
         public Context(DbContextOptions options) : base(options)
-        {}
-
+        {
+            ChangeTracker.LazyLoadingEnabled = false;
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -24,9 +25,10 @@ namespace Services.MsSqlService
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UsersConfiguration());
+            modelBuilder.ApplyConfiguration(new OrderConfiguration());
+            modelBuilder.ApplyConfiguration(new TireConfiguration());
             base.OnModelCreating(modelBuilder);
         }
 
-        
     }
 }

@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Services.MsSqlService;
 
 namespace Services.MsSqlService.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20210312092930_AddTires")]
+    partial class AddTires
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,21 +97,6 @@ namespace Services.MsSqlService.Migrations
                         });
                 });
 
-            modelBuilder.Entity("OrderTire", b =>
-                {
-                    b.Property<int>("OrdersId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TiresId")
-                        .HasColumnType("int");
-
-                    b.HasKey("OrdersId", "TiresId");
-
-                    b.HasIndex("TiresId");
-
-                    b.ToTable("OrderTire");
-                });
-
             modelBuilder.Entity("Models.Order", b =>
                 {
                     b.HasOne("Models.User", "User")
@@ -119,21 +106,6 @@ namespace Services.MsSqlService.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("OrderTire", b =>
-                {
-                    b.HasOne("Models.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrdersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Models.Tire", null)
-                        .WithMany()
-                        .HasForeignKey("TiresId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
