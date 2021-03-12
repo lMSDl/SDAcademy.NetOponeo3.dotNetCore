@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Models;
@@ -7,6 +8,8 @@ using Services.Interfaces;
 
 namespace RazorPages.Pages.Users
 {
+    [Authorize(Roles = nameof(Roles.Create))]
+    [Authorize(Roles = nameof(Roles.Update))]
     public class AddOrEditModel : PageModel
     {
         public IUsersServiceAsync Service {get;}

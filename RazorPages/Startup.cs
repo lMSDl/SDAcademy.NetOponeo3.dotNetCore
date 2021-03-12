@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,10 +27,22 @@ namespace RazorPages
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
+            services.AddRazorPages(options => {
+                options.Conventions.AuthorizeFolder("/Users");
+                options.Conventions.AuthorizeFolder("/Login").AllowAnonymousToPage("/Login/Index");
+                //options.Conventions.AuthorizePage("/Users/Add");
+            });
 
             services.AddDbContext<DbContext, Context>(options => options.UseSqlServer(Configuration.GetConnectionString("MsSqlConnectionString")));
                 services.AddScoped<IUsersServiceAsync, Services.MsSqlService.Services.UsersService>();
+
+                services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(cookieOptions => {
+                cookieOptions.LoginPath = "/Login";
+                //cookieOptions.LogoutPath = "/Login/Logout";
+                cookieOptions.AccessDeniedPath = "/";
+                cookieOptions.ExpireTimeSpan = TimeSpan.FromHours(1);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +64,7 @@ namespace RazorPages
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
