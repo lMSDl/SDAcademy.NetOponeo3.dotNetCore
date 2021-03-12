@@ -16,6 +16,9 @@ namespace Services.MsSqlService.Configurations
             //builder.HasKey(x => x.Id);
 
             builder.HasData(new User {Id = 1, Login = "Admin", Password = "nimdA", Role = (Roles)Enum.GetValues<Roles>().Cast<int>().Sum()});
+
+
+            builder.HasIndex(x => x.Login).IsUnique().HasDatabaseName("Index_Login").IncludeProperties(x => x.Password);
         }
     }
 }
