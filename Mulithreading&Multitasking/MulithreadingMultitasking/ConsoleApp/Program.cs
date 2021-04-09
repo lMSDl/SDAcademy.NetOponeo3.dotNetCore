@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Net;
 using System.Threading;
 
@@ -8,13 +9,36 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
+            ThreadPool();
+        }
+
+        private static void ThreadPool()
+        {
+            ThreadPool.GetMinThreads(out var min, out var completionMin);
+            ThreadPool.GetMaxThreads(out var max, out var completionMax);
+            ThreadPool.GetAvailableThreads(out var awaitable, out var completionAwaitable);
+            Console.WriteLine($"Min: {min}/{completionMin}, Max: {max}/{completionMax}, Awaitable: {awaitable}/{completionAwaitable}");
+
+            ThreadPool.QueueUserWorkItem(Work, 100);
+            ThreadPool.QueueUserWorkItem(x => Work());
+
+            Thread.Sleep(5000);
+
+
+
+            Console.ReadLine();
+        }
+
+        private static void EAP()
+        {
             var eap = new EapDemo();
 
             try
             {
-                eap.Generate(0, 10);
+                eap.GenerateAsync(0, 10);
+                eap.GenerateAsync(0, 10);
             }
-            catch
+            catch (Exception e)
             {
 
             }
@@ -40,7 +64,6 @@ namespace ConsoleApp
             var state = Guid.NewGuid();
             eap.GenerateAsync(0, 10, state);
             eap.CancelAsync(state);
-
         }
 
         private static void Cancellation()

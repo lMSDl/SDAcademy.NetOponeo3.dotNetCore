@@ -30,6 +30,10 @@ namespace ConsoleApp
             return Enumerable.Range(from, count);
         }
 
+        public void GenerateAsync(int from, int count)
+        {
+            GenerateAsync(from, count, string.Empty);
+        }
         public void GenerateAsync(int from, int count, object userState)
         {
             if(_userStates.ContainsKey(userState))
@@ -65,6 +69,8 @@ namespace ConsoleApp
         {
             _userStates[userState].Cancel();
         }
+
+        public bool IsBusy => _userStates.ContainsKey(string.Empty);
 
         public event EventHandler<CompletedEventArgs<IEnumerable<int>>> GenerateCompleted;
     }
