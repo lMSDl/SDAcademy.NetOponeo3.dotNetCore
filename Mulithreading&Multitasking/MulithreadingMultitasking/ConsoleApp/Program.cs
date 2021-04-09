@@ -7,7 +7,9 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
-            Interrupting();
+            var finder = new RandomFinderWithDataSlot();
+            finder.Execute(5, 10);
+            Console.WriteLine($"Total calls: {finder.TotalCalls}");
         }
 
         private static void Interrupting()
