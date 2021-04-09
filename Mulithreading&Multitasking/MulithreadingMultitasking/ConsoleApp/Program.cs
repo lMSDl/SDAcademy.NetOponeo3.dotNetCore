@@ -9,10 +9,10 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
-            ThreadPool();
+            ThreadPool_();
         }
 
-        private static void ThreadPool()
+        private static void ThreadPool_()
         {
             ThreadPool.GetMinThreads(out var min, out var completionMin);
             ThreadPool.GetMaxThreads(out var max, out var completionMax);
