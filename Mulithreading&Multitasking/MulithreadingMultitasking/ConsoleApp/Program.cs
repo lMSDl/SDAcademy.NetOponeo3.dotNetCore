@@ -7,6 +7,16 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
+            var exercise = new Exercise1(10);
+                exercise.Execute("abc");
+            exercise.Execute("abc");
+            Thread.Sleep(10000);
+            exercise.Execute("123");
+            exercise.Execute("abc");
+        }
+
+        private static void Finder()
+        {
             var finder = new RandomFinderWithDataSlot();
             finder.Execute(5, 10);
             Console.WriteLine($"Total calls: {finder.TotalCalls}");
