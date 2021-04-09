@@ -7,7 +7,37 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
-            Creating();
+            Interrupting();
+        }
+
+        private static void Interrupting()
+        {
+            var thread = new Thread(Sleep);
+            thread.Start();
+
+            thread.Interrupt();
+            Thread.Sleep(1000);
+            thread.Interrupt();
+            Thread.Sleep(2000);
+            thread.Interrupt();
+            Thread.Sleep(3000);
+            thread.Interrupt();
+        }
+
+        private static void Sleep()
+        {
+            while(true)
+            {
+                try
+                {
+                    Thread.Sleep(Timeout.Infinite);
+                }
+                catch(ThreadInterruptedException)
+                {
+                    Console.WriteLine("Thread interrupted");
+                }
+                Work(10);
+            }
         }
 
         private static void Creating()
