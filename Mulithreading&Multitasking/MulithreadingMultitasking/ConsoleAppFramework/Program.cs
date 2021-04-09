@@ -9,9 +9,38 @@ namespace ConsoleAppFramework
 {
     class Program
     {
+
+        public delegate string AsyncTestMethod(int callDuration);
         static void Main(string[] args)
         {
-            Interrupting();
+            ApmDemoAsync adAsync = new ApmDemoAsync();
+            var resultAsync = adAsync.BeginTestMethod(1000);
+            Console.WriteLine(adAsync.EndTestMethod(resultAsync));
+            
+            ApmDemo ad = new ApmDemo();
+
+
+            var caller = new AsyncTestMethod(ad.TestMethod);
+
+            IAsyncResult result = caller.BeginInvoke(3000, null, null);
+            IAsyncResult result2 = caller.BeginInvoke(5000, null, null);
+            IAsyncResult result3 = caller.BeginInvoke(7000, null, null);
+            IAsyncResult result4 = caller.BeginInvoke(9000, x => Console.WriteLine(caller.EndInvoke(x)), null);
+
+            while (!result.IsCompleted) Thread.Sleep(1);
+            Console.WriteLine(caller.EndInvoke(result));
+
+            Console.WriteLine(caller.EndInvoke(result2));
+
+            while(!result3.AsyncWaitHandle.WaitOne(500)) {
+                Console.WriteLine("Waiting for result3");
+            }
+            Console.WriteLine(caller.EndInvoke(result3));
+
+
+
+
+            Console.ReadLine();
         }
 
         private static void Interrupting()
