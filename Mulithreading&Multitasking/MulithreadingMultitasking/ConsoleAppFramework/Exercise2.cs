@@ -6,6 +6,13 @@ namespace ConsoleApp
 {
     public class Exercise2
     {
+        private delegate IEnumerable<int> AsyncGenerate(int from, int count);
+        AsyncGenerate GenerateCaller;
+
+        public Exercise2()
+        {
+            GenerateCaller = Generate;
+        }
 
         public IEnumerable<int> Generate(int from, int count)
         {

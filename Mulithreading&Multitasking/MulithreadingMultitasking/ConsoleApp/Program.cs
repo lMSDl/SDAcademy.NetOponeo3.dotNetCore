@@ -8,7 +8,39 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
-            Cancellation();
+            var eap = new EapDemo();
+
+            try
+            {
+                eap.Generate(0, 10);
+            }
+            catch
+            {
+
+            }
+
+            eap.GenerateCompleted += (s, e) =>
+            {
+                if (e.Cancelled)
+                {
+                    Console.WriteLine($"{e.UserState} cancelled");
+                }
+                else if (e.Error != null)
+                {
+                    Console.WriteLine($"{e.UserState} error");
+                }
+                else
+                {
+                    Console.WriteLine($"{e.UserState} result");
+                }
+            };
+
+            eap.GenerateAsync(0, 100, Guid.NewGuid());
+            eap.GenerateAsync(0, 100, Guid.NewGuid());
+            var state = Guid.NewGuid();
+            eap.GenerateAsync(0, 10, state);
+            eap.CancelAsync(state);
+
         }
 
         private static void Cancellation()
