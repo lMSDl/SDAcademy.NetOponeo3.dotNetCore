@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="APM.cs" />
     <Compile Include="ApmDemo.cs" />
+    <Compile Include="Exercise2.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
