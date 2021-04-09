@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading;
 
 namespace ConsoleApp
@@ -7,12 +8,39 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
-            var exercise = new Exercise1(10);
-                exercise.Execute("abc");
-            exercise.Execute("abc");
-            Thread.Sleep(10000);
-            exercise.Execute("123");
-            exercise.Execute("abc");
+            Cancellation();
+        }
+
+        private static void Cancellation()
+        {
+            var cts = new CancellationTokenSource();
+            Cancellation(cts.Token);
+
+
+            var wc = new WebClient();
+            wc.DownloadStringCompleted += (s, e) => Console.WriteLine("Download comlpeted");
+            cts.Token.Register(() => wc.CancelAsync());
+
+            cts.CancelAfter(1000);
+        }
+
+        private static void Cancellation(CancellationToken token)
+        {
+            var cts = new CancellationTokenSource();
+
+            cts.Token.Register(() => Console.WriteLine("Cancellation requested"));
+            cts.Token.Register(() => cts.Dispose());
+
+            CancellationTokenSource linkedCts = CancellationTokenSource.CreateLinkedTokenSource(token, cts.Token);
+            linkedCts.Token.Register(() => linkedCts.Dispose());
+            
+                new Thread(() => Work(int.MaxValue, linkedCts.Token)).Start();
+                new Thread(() => Work(int.MaxValue, linkedCts.Token)).Start();
+
+
+                //Thread.Sleep(2500);
+                //cts.Cancel();
+                //cts.CancelAfter(2500);
         }
 
         private static void Finder()
@@ -71,6 +99,21 @@ namespace ConsoleApp
 
             //Thread.CurrentThread.Name = "Main";
             Work(100);
+        }
+
+        private static void Work(object state, CancellationToken cancellationToken)
+        {
+            for (int i = 0; i < (int)state; i++)
+            {
+                //cancellationToken.ThrowIfCancellationRequested();
+                //Thread.Sleep(5000);
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    Console.WriteLine($"{Thread.CurrentThread.Name} {Thread.CurrentThread.ManagedThreadId}: Cancelled on {i}");
+                    break;
+                }
+                Console.WriteLine($"{Thread.CurrentThread.Name} {Thread.CurrentThread.ManagedThreadId} {i}");
+            }
         }
 
         private static void Work(object state)
