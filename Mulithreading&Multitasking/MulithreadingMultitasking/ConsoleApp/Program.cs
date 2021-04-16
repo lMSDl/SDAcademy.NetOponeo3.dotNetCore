@@ -11,8 +11,26 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
-            TaskCompletionSource();
+            TaskExceptions();
+            Console.ReadLine();
+        }
 
+        private static int counter = 0;
+        private static Task AsyncAwait()
+        {
+            Console.WriteLine("Enter1 " + Thread.CurrentThread.ManagedThreadId);
+            return Task.Run(async () =>
+            {
+                Console.WriteLine("Exit2 " + Thread.CurrentThread.ManagedThreadId);
+                Thread.Sleep(1000);
+                if (counter++ < 5)
+                    await AsyncAwait();
+                Thread.Sleep(1000);
+
+                await Task.Yield();
+                Console.WriteLine("Exit " + Thread.CurrentThread.ManagedThreadId);
+                counter--;
+            });
         }
 
         private static void TaskCompletionSource()
@@ -128,7 +146,7 @@ namespace ConsoleApp
             //Wypisanie statusu wszystkich zadań
 
         }
-        private static void TaskExceptions()
+        private async static void TaskExceptions()
         {
             Task[] tasks = new[]
                            {
@@ -139,15 +157,28 @@ namespace ConsoleApp
                 Task.Run(() => DoWork()),
             };
 
-            int index = Task.WaitAny(tasks);
+
+            //Task task = await Task.WhenAny(tasks);
+
+            /*int index = Task.WaitAny(tasks);
             foreach (var e in tasks[index].Exception?.InnerExceptions ?? Enumerable.Empty<Exception>())
             {
                 if (e is IndexOutOfRangeException)
                     Console.WriteLine(e.Message);
                 else
                     throw e;
-            }
+            }*/
 
+            Task task;
+            try
+            {
+                task = Task.WhenAll(tasks);
+                await task;
+            }
+            catch(Exception e)
+            {
+
+            }
 
             /*try
             {
@@ -236,8 +267,7 @@ namespace ConsoleApp
             {
                 throw new IndexOutOfRangeException();
             }
-            else
-            {//if(value == 4) {
+            else if(value == 4) {
                 throw new Exception();
             }
         }
