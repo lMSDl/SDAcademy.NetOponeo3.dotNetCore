@@ -11,8 +11,38 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
+            TaskCompletionSource();
 
-            TaskContinuation();
+        }
+
+        private static void TaskCompletionSource()
+        {
+            var task = RunAsync<object>(() => { Thread.Sleep(1000); Console.WriteLine("Done"); return null; });
+            Console.WriteLine(task.Status);
+            Task.Delay(100).Wait();
+            Console.WriteLine(task.Status);
+            Task.Delay(1000).Wait();
+            Console.WriteLine(task.Status);
+        }
+
+        public static Task<T> RunAsync<T>(Func<T> function)
+        {
+            var tcs = new TaskCompletionSource<T>();
+            ThreadPool.QueueUserWorkItem(_ =>
+            {
+                try
+                {
+                    var result = function();
+                    tcs.SetResult(result);
+                }
+                catch (Exception e)
+                {
+                    tcs.SetException(e);
+                }
+                tcs.TrySetCanceled();
+            });
+
+            return tcs.Task;
         }
 
         private static void TaskContinuation()
