@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -12,18 +11,63 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
-            TaskExceptions();
 
-            Console.ReadLine();
+            TaskContinuation();
         }
 
+        private static void TaskContinuation()
+        {
+            /*var calculationsTask = */
+            var task = Task.Run(() =>
+            {
+                Console.WriteLine(Thread.CurrentThread.ManagedThreadId);
+                var random = new Random();
+                Thread.Sleep(1000);
+                int v1 = random.Next();
+                Thread.Sleep(1000);
+                int v2 = random.Next();
+                var v = new[] { v1, v2 };
+                return Enumerable.Range(v.Min(), v.Max());
+            })/*;
+
+            var processTask = calculationsTask*/.ContinueWith(task =>
+                                                {
+                                                    Console.WriteLine(Thread.CurrentThread.ManagedThreadId);
+                                                    /*if (task.Status == TaskStatus.Faulted)
+                                                    {
+                                                        Console.WriteLine(task.Status);
+                                                        return null;
+                                                    }*/
+                                                    var result = task.Result;
+                                                    Thread.Sleep(1000);
+                                                    var min = result.Min();
+                                                    Thread.Sleep(1000);
+                                                    var max = result.Max();
+                                                    Thread.Sleep(1000);
+                                                    var average = result.Average();
+                                                    return new Tuple<int, int, double>(min, max, average);
+                                                }, TaskContinuationOptions.OnlyOnRanToCompletion)/*;
+
+            var displayTask = processTask*/.ContinueWith(task =>
+                                           {
+                                               Console.WriteLine(Thread.CurrentThread.ManagedThreadId);
+                                               var result = task.Result;
+                                               /*if (result != null)*/
+                                                   Console.WriteLine($"Min: {result.Item1}, Max: {result.Item2}, Average {result.Item3}");
+                                           }, TaskContinuationOptions.OnlyOnRanToCompletion);
+
+            while (true)
+            {
+                Console.ReadLine();
+            }
+        }
 
         void Exercise3(int number)
         {
 
             for (int i = 0; i < number; i++)
             {
-                switch(i%5)
+                switch (i % 5)
                 {
                     case 0:
                         //Zadanie, które kończy się sukcesem
@@ -45,8 +89,9 @@ namespace ConsoleApp
             }
 
             Thread.Sleep(100);
-                //cancel Token2
+            //cancel Token2
             Task.WaitAll();
+
 
             //Obsługa wyjątków
 
@@ -161,7 +206,8 @@ namespace ConsoleApp
             {
                 throw new IndexOutOfRangeException();
             }
-            else {//if(value == 4) {
+            else
+            {//if(value == 4) {
                 throw new Exception();
             }
         }
@@ -280,7 +326,7 @@ namespace ConsoleApp
             Debug.WriteLine("");
 
             var tasks = new[] { t1, t2, t3, t4, t5, t6, t7, t8 };
-            Debug.WriteLine("Cancelled: " + string.Join(" " , tasks.Select((task, index) => new { index, task }).Where(x => x.task.IsCanceled).Select(x => $"t{x.index + 1}")));
+            Debug.WriteLine("Cancelled: " + string.Join(" ", tasks.Select((task, index) => new { index, task }).Where(x => x.task.IsCanceled).Select(x => $"t{x.index + 1}")));
             Debug.WriteLine("Exception: " + string.Join(" ", tasks.Select((task, index) => new { index, task }).Where(x => x.task.Exception != null).Select(x => $"t{x.index + 1}")));
             Debug.WriteLine("Completed: " + string.Join(" ", tasks.Select((task, index) => new { index, task }).Where(x => x.task.IsCompleted).Select(x => $"t{x.index + 1}")));
             Debug.WriteLine("Completed successfully: " + string.Join(" ", tasks.Select((task, index) => new { index, task }).Where(x => x.task.IsCompletedSuccessfully).Select(x => $"t{x.index + 1}")));
@@ -362,14 +408,14 @@ namespace ConsoleApp
 
             CancellationTokenSource linkedCts = CancellationTokenSource.CreateLinkedTokenSource(token, cts.Token);
             linkedCts.Token.Register(() => linkedCts.Dispose());
-            
-                new Thread(() => Work(int.MaxValue, linkedCts.Token)).Start();
-                new Thread(() => Work(int.MaxValue, linkedCts.Token)).Start();
+
+            new Thread(() => Work(int.MaxValue, linkedCts.Token)).Start();
+            new Thread(() => Work(int.MaxValue, linkedCts.Token)).Start();
 
 
-                //Thread.Sleep(2500);
-                //cts.Cancel();
-                //cts.CancelAfter(2500);
+            //Thread.Sleep(2500);
+            //cts.Cancel();
+            //cts.CancelAfter(2500);
         }
 
         private static void Finder()
@@ -395,13 +441,13 @@ namespace ConsoleApp
 
         private static void Sleep()
         {
-            while(true)
+            while (true)
             {
                 try
                 {
                     Thread.Sleep(Timeout.Infinite);
                 }
-                catch(ThreadInterruptedException)
+                catch (ThreadInterruptedException)
                 {
                     Console.WriteLine("Thread interrupted");
                 }
