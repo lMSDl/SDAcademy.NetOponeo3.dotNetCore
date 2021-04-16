@@ -17,6 +17,42 @@ namespace ConsoleApp
             Console.ReadLine();
         }
 
+
+        void Exercise3(int number)
+        {
+
+            for (int i = 0; i < number; i++)
+            {
+                switch(i%5)
+                {
+                    case 0:
+                        //Zadanie, które kończy się sukcesem
+                        break;
+                    case 1:
+                        //Zadanie, które kończy się wyjątkiem IndexOutOfRange i  jako parametr przekazujemy i
+                        break;
+                    case 2:
+                        //Zadanie, które przyjmuje anulowany cancellationToken
+                        break;
+                    case 3:
+                        //Zadanie, które będzie anulowane przez sprawdzenie IsCancellationRequested (Token2)
+                        break;
+                    case 4:
+                        //Zadanie, które będzie anulowane ThrowIfCancellationRequested (Token2)
+                        break;
+                }
+
+            }
+
+            Thread.Sleep(100);
+                //cancel Token2
+            Task.WaitAll();
+
+            //Obsługa wyjątków
+
+            //Wypisanie statusu wszystkich zadań
+
+        }
         private static void TaskExceptions()
         {
             Task[] tasks = new[]
