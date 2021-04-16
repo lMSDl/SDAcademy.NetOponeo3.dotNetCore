@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -11,8 +12,35 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
-            TaskExceptions();
             Console.ReadLine();
+        }
+        
+        public static Task VoidTask(bool value)
+        {
+            if (value)
+                return Task.Delay(1000);
+            else
+                return Task.CompletedTask;
+
+        }
+        
+        public static Dictionary<string, string> stringDictionary = new Dictionary<string, string>();
+
+
+        public static Task<string> DownloadString(string address)
+        {
+            if (stringDictionary.ContainsKey(address))
+                return Task.FromResult(stringDictionary[address]);
+
+            return Task.Run(async () =>
+            {
+                using (var webClient = new WebClient())
+                {
+                    var result = await webClient.DownloadStringTaskAsync(new Uri(address));
+                    stringDictionary[address] = result;
+                    return result;
+                }
+            });
         }
 
         private static int counter = 0;

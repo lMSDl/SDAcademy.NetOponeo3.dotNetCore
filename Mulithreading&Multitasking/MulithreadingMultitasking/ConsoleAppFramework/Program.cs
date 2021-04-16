@@ -43,6 +43,14 @@ namespace ConsoleAppFramework
             Console.ReadLine();
         }
 
+        public static Task VoidTask(bool value)
+        {
+            if (value)
+                return Task.Delay(1000);
+            else
+                return Task.FromResult<object>(null);
+        }
+
         private static void Interrupting()
         {
             var thread = new Thread(Sleep) { IsBackground = true };
