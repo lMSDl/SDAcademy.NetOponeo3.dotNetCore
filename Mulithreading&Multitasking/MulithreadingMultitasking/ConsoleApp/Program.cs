@@ -12,9 +12,52 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
-            Matrix.Execute();
+            Plinq();
 
             Console.ReadLine();
+        }
+
+        private static void Plinq()
+        {
+            var cts = new CancellationTokenSource();
+            //Task.Delay(1).ContinueWith(x => cts.Cancel());
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            try
+            {
+                var result = Enumerable.Range(0, 2000)
+                    .AsParallel()
+                    .AsOrdered()
+                    .WithMergeOptions(ParallelMergeOptions.AutoBuffered)
+                    .WithDegreeOfParallelism(Environment.ProcessorCount)
+                    .WithExecutionMode(ParallelExecutionMode.ForceParallelism)
+                    .WithCancellation(cts.Token)
+                    .Where(x => x % 2 == 0)
+                    .Select((x, i) => { Thread.Sleep(1); return x; })
+                    .AsSequential()
+                    .Take(10)
+                    .ToList();
+                result.ForEach(x =>
+                {
+                    Console.WriteLine(x);
+                });
+                result.AsParallel().ForAll(x =>
+                {
+                    Console.WriteLine(x);
+                });
+            }
+            catch (OperationCanceledException)
+            {
+
+            }
+            catch (AggregateException)
+            {
+
+            }
+            stopwatch.Stop();
+            cts.Dispose();
+            Console.WriteLine(stopwatch.ElapsedMilliseconds + "ms");
         }
 
         private static void Parallel()
