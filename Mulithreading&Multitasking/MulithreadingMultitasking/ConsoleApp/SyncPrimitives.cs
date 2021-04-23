@@ -13,6 +13,9 @@ namespace ConsoleApp
             Barrier();
         }
 
+
+
+
         static void Barrier()
         {
             var barrier = new Barrier(3, b =>

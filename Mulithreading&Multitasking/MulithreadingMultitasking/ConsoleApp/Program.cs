@@ -12,7 +12,7 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
-            SyncPrimitives.Execute();
+            ConcurrentCollections.Execute();
 
             Console.WriteLine("Exit");
             Console.ReadLine();
