@@ -12,8 +12,9 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
-            Plinq();
+            Monitor_.Execute();
 
+            Console.WriteLine("Exit");
             Console.ReadLine();
         }
 
