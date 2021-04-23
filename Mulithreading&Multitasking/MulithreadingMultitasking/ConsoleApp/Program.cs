@@ -12,9 +12,16 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
+            Matrix.Execute();
+
+            Console.ReadLine();
+        }
+
+        private static void Parallel()
+        {
             //Parallel.Invoke(Work);
 
-            Parallel.For(0, 100, index =>
+            System.Threading.Tasks.Parallel.For(0, 100, index =>
             {
                 Console.WriteLine(index);
             });
@@ -25,7 +32,7 @@ namespace ConsoleApp
             var items = Enumerable.Range(100, 200);
             try
             {
-                Parallel.ForEach(items, item =>
+                System.Threading.Tasks.Parallel.ForEach(items, item =>
                 {
                     Console.WriteLine(item);
                     if (item == 150)
@@ -39,17 +46,15 @@ namespace ConsoleApp
             }
 
             var total = 0;
-            Parallel.For(0, 1000, () => 0, (index, loop, sum) =>
+            System.Threading.Tasks.Parallel.For(0, 1000, () => 0, (index, loop, sum) =>
             {
                 sum += index;
                 return sum;
             },
             x => { Console.WriteLine("Sum local: " + x); Interlocked.Add(ref total, x); });
             Console.WriteLine("Sum total: " + total);
-
-            Console.ReadLine();
         }
-        
+
         public static Task VoidTask(bool value)
         {
             if (value)
