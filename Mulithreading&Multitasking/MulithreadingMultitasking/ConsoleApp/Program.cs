@@ -12,11 +12,12 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
-            Monitor_.Execute();
+            SyncPrimitives.Execute();
 
             Console.WriteLine("Exit");
             Console.ReadLine();
         }
+
 
         private static void Plinq()
         {
