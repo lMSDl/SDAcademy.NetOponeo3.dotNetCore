@@ -11,7 +11,6 @@ namespace ConsoleApp
 {
     public class Monitor_
     {
-
         static object lock1 = new object();
         static object lock2 = new object();
         public static void Execute()
@@ -27,14 +26,17 @@ namespace ConsoleApp
                 Thread.Sleep(1000);
                 var lockSuccess = false;
                 Monitor.TryEnter(lock2, 10000, ref lockSuccess);
-                try
+                //if (lockSuccess)
                 {
-                    Thread.Sleep(1000);
-                }
-                finally
-                {
-                    if(lockSuccess)
-                        Monitor.Exit(lock2);
+                    try
+                    {
+                        Thread.Sleep(1000);
+                    }
+                    finally
+                    {
+                        if (lockSuccess)
+                            Monitor.Exit(lock2);
+                    }
                 }
             }
         }
